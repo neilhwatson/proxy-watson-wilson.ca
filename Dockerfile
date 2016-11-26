@@ -2,11 +2,8 @@ FROM haproxy:latest
 MAINTAINER  Neil Watson <neil@watson-wilson.ca>
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 EXPOSE 80
-LABEL version="1.0"
 
-ENTRYPOINT haproxy -db -V -f /usr/local/etc/haproxy/haproxy.cfg
-
-# TODO add --drop-cap
+ENTRYPOINT [ "haproxy", "-db", "-V", "-f", "/usr/local/etc/haproxy/haproxy.cfg" ]
 
 # Howto:
 
@@ -16,7 +13,7 @@ ENTRYPOINT haproxy -db -V -f /usr/local/etc/haproxy/haproxy.cfg
 
 # Run with, where host port 80 is mapped to conatiner port 80, exposed by
 # Docker file
-# docker run -i --cap-drop=all --cap-add=chown --cap-add=net_bind_service --cap-add=setgid --publish 80:80 --name my_haproxy -t my_haproxy
+# docker run -i --cap-drop=all --cap-add=chown --cap-add=net_bind_service --cap-add=setgid --detatch --restart=unless-stopped ---publish 80:80 --name my_haproxy -t my_haproxy
 
 # Stop with
 # docker stop $(docker ps |awk '$2 ~ /^my_haproxy/ { print $1 }')
